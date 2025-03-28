@@ -28,28 +28,33 @@ root@c19729f2e4e1:/# apt-get install maven
 ```
 pipeline {
     agent any
+    tools {
+        maven 'Maven 3.9.2' // Match the name in Global Tool Configuration
+    }
     stages {
-        stage("Clean Up"){
+        stage("Clean Up") {
             steps {
                 deleteDir()
             }
         }
-        stage("Clone Repo"){
+        stage("Clone Repo") {
             steps {
                 sh "git clone https://github.com/jenkins-docs/simple-java-maven-app.git"
             }
         }
-        stage("Build")
+        stage("Build") {  // <-- Missing curly brace added
             steps {
                 dir("simple-java-maven-app") {
                     sh "mvn clean install"
                 }
+            }  // <-- Properly closed steps block
         }
-        stage("Test")
+        stage("Test") {  // <-- Missing curly brace added
             steps {
                 dir("simple-java-maven-app") {
                     sh "mvn test"
                 }
+            }  // <-- Properly closed steps block
         }
     }
 }
